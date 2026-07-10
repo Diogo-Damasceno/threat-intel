@@ -9,7 +9,7 @@ description = "Threat Intelligence Platform: armazenamento, busca e API REST de 
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Diogo Damasceno", email = "dev.diogodamasceno@gmail.com" }]
+authors = [{ name = "Diogo Damasceno", email = "mitszukyo@gmail.com" }]
 keywords = ["security", "threat-intel", "ioc", "cti", "cybersecurity"]
 dependencies = []
 
