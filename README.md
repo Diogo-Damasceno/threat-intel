@@ -1,67 +1,56 @@
-# Threat Intelligence Platform (TIP) 🌐
+# threat-intel
 
-Plataforma para armazenar, consultar e compartilhar **Indicadores de Comprometimento (IOCs)** — IPs, domínios, URLs, hashes (MD5/SHA1/SHA256) e e-mails maliciosos — com **detecção automática de tipo**, busca filtrada, importação em massa e **API REST** (stdlib pura, sem dependências).
+Plataforma para armazenar, consultar e compartilhar **Indicadores de
+Comprometimento (IOCs)** — IPs, domínios, URLs, hashes (MD5/SHA1/SHA256) e
+e-mails maliciosos — com **detecção automática de tipo**, busca filtrada,
+importação em massa e **API REST** (stdlib pura, sem dependências).
 
-> ⚠️ Ferramenta educacional/defensiva para gestão de threat intel.
-
-## Recursos
-
-- **Detecção automática** do tipo de IOC
-- Deduplicação inteligente (atualiza `last_seen`/confiança em vez de duplicar)
-- Campos: `threat`, `source`, `confidence` (0–100), `tags`, `first_seen`, `last_seen`
-- **Busca** por tipo, ameaça e confiança mínima
-- **Importação em massa** de arquivos (um IOC por linha, ignora `#` comentários)
-- **API REST**: `/health`, `/stats`, `/lookup`, `/search`, `POST /ioc`
-- Persistência em **SQLite**
+> ⚠️ Ferramenta educacional/defensiva para gestão de IOCs próprios.
 
 ## Instalação
+
+Pré-requisitos: **Python 3.10+**.
 
 ```bash
 git clone https://github.com/Diogo-Damasceno/threat-intel.git
 cd threat-intel
+python3 -m venv .venv
+. .venv/bin/activate
 pip install -e .
 ```
 
-## Uso (CLI)
+Após instalar, o comando do projeto fica disponível dentro do venv.
+Para usar fora dele, crie um atalho:
 
 ```bash
-tip add 185.220.101.5 --threat C2 --source honeypot --confidence 90
-tip add evil-phish.tk --threat phishing
-tip lookup 185.220.101.5
-tip search --type ip --min-confidence 80
-tip import iocs.txt --threat ransomware --source feed-x
+mkdir -p ~/.local/bin
+ln -sf "$(pwd)/.venv/bin/tip" ~/.local/bin/tip
+```
+
+> Dica: se `~/.local/bin` não estiver no teu `PATH`, rode
+> `export PATH="$HOME/.local/bin:$PATH"` (e adicione ao `~/.bashrc`/`~/.zshrc`).
+
+
+## Uso
+
+```bash
+# adiciona um IOC
+tip add 185.220.101.1 --threat botnet --tags c2
+
+# busca por valor / tipo
+tip lookup 185.220.101.1
+tip search --type ip --min-confidence 70
+
+# importa IOCs em massa de arquivo
+tip import iocs.txt
+
+# sobe a API REST
+tip serve --port 8080
+
+# estatisticas
 tip stats
-```
-
-## API REST
-
-```bash
-tip serve --port 8088
-```
-
-```bash
-# adicionar IOC
-curl -X POST http://127.0.0.1:8088/ioc \
-  -H 'Content-Type: application/json' \
-  -d '{"value":"9.9.9.9","threat":"C2","confidence":95}'
-
-# consultar
-curl 'http://127.0.0.1:8088/lookup?value=9.9.9.9'
-curl 'http://127.0.0.1:8088/search?type=ip&min_confidence=80'
-curl http://127.0.0.1:8088/stats
-```
-
-## Integração com o portfólio
-
-Este TIP é o *hub* central: o **Honeypot** alimenta IOCs, o **Malware Analyzer** exporta hashes/URLs, e o **Phishing Detector** consulta domínios. Juntos formam a base do **SentinelAI**.
-
-## Testes
-
-```bash
-pip install -e '.[dev]'
-pytest -q
 ```
 
 ## Licença
 
-MIT
+MIT — veja `LICENSE`.
