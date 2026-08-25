@@ -19,7 +19,7 @@ from .store import TIPStore, IOC
 
 def make_handler(store: TIPStore):
     class Handler(BaseHTTPRequestHandler):
-        def log_message(self, *args):  # silencioso
+        def log_message(self, *args):
             pass
 
         def _send(self, code: int, payload: dict):

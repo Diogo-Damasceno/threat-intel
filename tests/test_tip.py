@@ -30,7 +30,7 @@ def test_dedup_updates():
     s = TIPStore(":memory:")
     id1 = s.add(IOC("1.2.3.4", "ip", threat="C2"))
     id2 = s.add(IOC("1.2.3.4", "ip", threat="phishing", confidence=80))
-    assert id1 == id2  # mesmo registro
+    assert id1 == id2
     res = s.lookup("1.2.3.4")[0]
     assert res["threat"] == "phishing"
 
@@ -68,7 +68,7 @@ def test_rest_api_roundtrip():
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
     try:
-        # POST
+
         req = urllib.request.Request(
             "http://127.0.0.1:8091/ioc",
             data=json.dumps({"value": "9.9.9.9", "threat": "C2",
@@ -76,13 +76,13 @@ def test_rest_api_roundtrip():
             headers={"Content-Type": "application/json"}, method="POST")
         r = urllib.request.urlopen(req, timeout=3)
         assert r.status == 201
-        # lookup
+
         r2 = urllib.request.urlopen(
             "http://127.0.0.1:8091/lookup?value=9.9.9.9", timeout=3)
         data = json.loads(r2.read())
         assert data["found"] is True
         assert data["results"][0]["threat"] == "C2"
-        # health
+
         r3 = urllib.request.urlopen("http://127.0.0.1:8091/health", timeout=3)
         assert json.loads(r3.read())["status"] == "ok"
     finally:
